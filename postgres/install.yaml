@@ -1,0 +1,21 @@
+- hosts: servers
+  become: yes
+  tasks:
+    - name: Add PostgreSQL repo
+      become: true
+      become_user: ubuntu
+      shell: wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+
+    - name: Add PostgreSQL repo
+      become: true
+      become_user: ubuntu
+      shell: echo "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main" |sudo tee  /etc/apt/sources.list.d/pgdg.list     
+    
+    - name: Install PostgreSQL
+      apt:
+        name: ['postgresql-12', 'postgresql-client-12']
+        state: present
+        update_cache: true
+
+    - name: Ensure the PostgreSQL service is running
+      service: name=postgresql state=started enabled=yes

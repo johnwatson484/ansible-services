@@ -1,0 +1,13 @@
+- hosts: servers
+  become: yes
+  tasks:
+    - name: Configure server.conf
+      become: true
+      blockinfile:
+        path: /etc/postgresql/12/main/postgresql.conf
+        block: |
+          listen_addresses = '*'
+
+    - name: Restart server
+      become: true
+      shell: sudo systemctl restart postgresql
