@@ -17,3 +17,15 @@ Amend host and worker IP addresses as appropriate in `./hosts`
 
 ### Configure
 `ansible-playbook -i ./hosts ./postgres/configure.yaml`
+
+### Create super user (Optional)
+Create superuser with login rights from any source.  
+
+Update `./postgres/super-user.yaml` with appropriate username and MD5 hashed password.  The example in the file uses `superuser` and `postgres` as the MD5 hash.  
+
+`ansible-playbook -i ./hosts ./postgres/super-user.yaml`
+
+### Create database (Optional)
+Update `./postgres/database.yaml` with appropriate database, user and MD5 hashed password.  The example in the file uses `test`, `testuser` and `postgres` as the MD5 hash.  
+
+`ansible-playbook -i ./hosts ./postgres/database.yaml`

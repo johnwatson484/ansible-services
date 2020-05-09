@@ -1,0 +1,31 @@
+- hosts: servers
+  become: yes
+  tasks:
+    - name: Ensure database is created
+      become: true
+      become_user: postgres
+      postgresql_db: name=test
+      
+    - name: Create user
+      become: true
+      become_user: postgres
+      postgresql_user:
+        db: test
+        name: testuser
+        password: e8a48653851e28c69d0506508fb27fc5
+        priv: ALL
+        expires: infinity
+
+    - name: Grant access to user
+      postgresql_pg_hba:
+        dest: /etc/postgresql/12/main/pg_hba.conf
+        contype: host
+        users: testuser
+        source: all
+        databases: test
+        method: md5
+        create: true
+
+    - name: Restart server
+      become: true
+      shell: sudo systemctl restart postgresql

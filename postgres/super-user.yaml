@@ -1,0 +1,26 @@
+- hosts: servers
+  become: yes
+  tasks:
+    - name: Create user
+      become: true
+      become_user: postgres
+      postgresql_user:
+        db: postgres
+        name: superuser
+        password: e8a48653851e28c69d0506508fb27fc5
+        role_attr_flags: SUPERUSER,CREATEROLE,CREATEDB,LOGIN,REPLICATION,BYPASSRLS
+        expires: infinity
+
+    - name: Grant access to superuser
+      postgresql_pg_hba:
+        dest: /etc/postgresql/12/main/pg_hba.conf
+        contype: host
+        users: superuser
+        source: all
+        databases: all
+        method: md5
+        create: true
+
+    - name: Restart server
+      become: true
+      shell: sudo systemctl restart postgresql
