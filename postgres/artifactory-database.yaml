@@ -4,15 +4,15 @@
     - name: Ensure database is created
       become: true
       become_user: postgres
-      postgresql_db: 
-        name: test
+      postgresql_db:
+        name: artifactory
       
     - name: Create user
       become: true
       become_user: postgres
       postgresql_user:
-        db: test
-        name: testuser
+        db: artifactory
+        name: artifactory
         password: e8a48653851e28c69d0506508fb27fc5
         priv: ALL
         expires: infinity
@@ -21,9 +21,9 @@
       postgresql_pg_hba:
         dest: /etc/postgresql/12/main/pg_hba.conf
         contype: host
-        users: testuser
+        users: artifactory
         source: all
-        databases: test
+        databases: artifactory
         method: md5
         create: true
 
