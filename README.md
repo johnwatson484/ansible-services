@@ -29,3 +29,12 @@ Update `./postgres/super-user.yaml` with appropriate username and MD5 hashed pas
 Update `./postgres/database.yaml` with appropriate database, user and MD5 hashed password.  The example in the file uses `test`, `testuser` and `postgres` as the MD5 hash.  
 
 `ansible-playbook -i ./hosts ./postgres/database.yaml`
+
+## RabbitMQ
+### Install
+`ansible-playbook -i ./hosts ./rabbitmq/install.yaml`
+
+### Configure
+Update `./rabbitmq/configure.yaml` with appropriate management username and password.  
+
+`ansible-playbook -i ./hosts ./rabbitmq/configure.yaml`

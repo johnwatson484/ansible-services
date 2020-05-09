@@ -1,0 +1,20 @@
+- hosts: servers
+  become: yes
+  tasks:
+    - name: Install management plugin
+      become: yes
+      shell: rabbitmq-plugins enable rabbitmq_management
+      
+    - rabbitmq_user:
+        user: rabbitmq
+        password: rabbitmq
+        vhost: /
+        tags: administrator,management
+        configure_priv: .*
+        read_priv: .*
+        write_priv: .*
+        state: present
+    
+    - rabbitmq_user:
+        user: guest
+        state: absent
