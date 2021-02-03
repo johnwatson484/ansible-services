@@ -38,3 +38,10 @@ Update `./postgres/database.yaml` with appropriate database, user and MD5 hashed
 Update `./rabbitmq/configure.yaml` with appropriate management username and password.  
 
 `ansible-playbook -i ./hosts ./rabbitmq/configure.yaml`
+
+## Kafka
+### Install
+`ansible-playbook -i ./hosts ./kafka/install.yaml`
+
+### Configure
+`ansible-playbook -i ./hosts ./kafka/configure.yaml`
