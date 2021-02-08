@@ -45,3 +45,13 @@ Update `./rabbitmq/configure.yaml` with appropriate management username and pass
 
 ### Configure
 `ansible-playbook -i ./hosts ./kafka/configure.yaml`
+
+
+### Configure authentication (Optional)
+Configure SASL/SCRAM auth for broker. Also adds an initial client user. 
+
+Update `./kafka/configure-auth.yaml` with appropriate username passwords.  The example in the file uses `kafka` for username of the broker and `client` for clients. 
+
+The public IP address in the listener configuration also needs updating.
+
+`ansible-playbook -i ./hosts ./kafka/configure-auth.yaml`

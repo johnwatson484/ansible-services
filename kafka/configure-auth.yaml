@@ -1,0 +1,47 @@
+- hosts: servers
+  become: yes
+  tasks:
+    - name: Create admin user
+      become: true
+      become_user: ubuntu
+      shell: sudo /usr/local/kafka/bin/kafka-configs.sh --zookeeper localhost:2181 --alter --add-config 'SCRAM-SHA-512=[iterations=8192,password=adminPassword]' --entity-type users --entity-name admin
+
+    - name: Create client user
+      become: true
+      become_user: ubuntu
+      shell: sudo /usr/local/kafka/bin/kafka-configs.sh --zookeeper localhost:2181 --alter --add-config 'SCRAM-SHA-512=[iterations=8192,password=clientPassword]' --entity-type users --entity-name client
+
+    - name: Configure server.properties
+      become: true
+      blockinfile:
+        path: /usr/local/kafka/config/server.properties
+        block: |
+          #auth    
+          sasl.enabled.mechanisms=SCRAM-SHA-512
+          sasl.mechanism.inter.broker.protocol=SCRAM-SHA-512
+          sasl.mechanism=SCRAM-SHA-512
+
+          listeners=INTERNAL://:9092,EXTERNAL://:9093
+          advertised.listeners=INTERNAL://localhost:9092,EXTERNAL://public_ip:9093
+
+          listener.security.protocol.map=INTERNAL:SASL_PLAINTEXT,EXTERNAL:SASL_PLAINTEXT
+          inter.broker.listener.name=INTERNAL
+
+          listener.name.internal.scram-sha-512.sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required \
+            username="admin" \
+            password="adminPassword";
+          listener.name.external.scram-sha-512.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required \
+            username="admin" \
+            password="adminPassword" \
+            user_admin="adminPassword" \
+            user_client="clientPassword";
+
+    - name: Start Zookeeper
+      become: true
+      become_user: ubuntu
+      shell: sudo systemctl start zookeeper
+
+    - name: Start Kafka
+      become: true
+      become_user: ubuntu
+      shell: sudo systemctl start kafka
