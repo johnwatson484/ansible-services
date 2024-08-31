@@ -1,0 +1,22 @@
+- hosts: servers
+  become: yes
+  tasks:
+    - name: Configure mongo.conf
+      become: true
+      replace:
+        path: /etc/mongod.conf
+        regexp: '^  bindIp:.*'
+        replace: '  bindIp: 0.0.0.0'
+
+    - name: Require authentication
+      become: true
+      blockinfile:
+        path: /etc/mongod.conf
+        marker: "# {mark} ANSIBLE MANAGED BLOCK"
+        block: |
+          security:
+            authorization: enabled
+
+    - name: Restart server
+      become: true
+      shell: sudo systemctl restart mongod

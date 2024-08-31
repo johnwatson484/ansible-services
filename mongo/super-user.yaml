@@ -1,0 +1,10 @@
+- hosts: servers
+  become: yes
+  tasks:
+    - name: Create MongoDB Admin User
+      shell: |
+        mongosh admin --eval 'db.createUser({user: "superuser", pwd: "mongo", roles: [{role: "root", db: "admin"}]})'  
+
+    - name: Restart server
+      become: true
+      shell: sudo systemctl restart mongod
