@@ -62,6 +62,12 @@ Update `./mongo/super-user.yaml` with appropriate username and MD5 hashed passwo
 
 `ansible-playbook -i ./hosts ./mongo/super-user.yaml`
 
+### Create database user  (Optional)
+
+Update `./mongo/database.yaml` with appropriate database, user and password.  The example in the file uses `test-db`, `testuser` and `mongo`.  The superuser credentials created in the previous step are used to create the database, so also need to be set.
+
+`ansible-playbook -i ./hosts ./mongo/database.yaml`
+
 ## RabbitMQ
 
 ### Install
